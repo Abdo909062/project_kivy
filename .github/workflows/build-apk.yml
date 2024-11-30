@@ -10,29 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: تنزيل الكود
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: إعداد Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Cache Gradle files
-        uses: actions/cache@v3
+      - name: إعداد Android SDK
+        uses: android-actions/setup-android@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}
+          api-level: 31
+          build-tools: 31.0.0
+          ndk: '22.1.7171670'
 
-      - name: Build APK
-        run: ./gradlew assembleRelease
+      - name: جعل gradlew قابلاً للتنفيذ
+        run: chmod +x ./gradlew
 
-      - name: Upload APK
+      - name: بناء APK
+        run: workflows/gradlew assembleRelease
+
+      - name: رفع ملف APK
         uses: actions/upload-artifact@v3
         with:
           name: Android-APK
