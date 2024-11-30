@@ -27,7 +27,7 @@ jobs:
           ndk: '22.1.7171670'
 
       - name: جعل gradlew قابلاً للتنفيذ
-        run: chmod +x ./gradlew
+        run: chmod +x workflows/gradlew
 
       - name: بناء APK
         run: workflows/gradlew assembleRelease
