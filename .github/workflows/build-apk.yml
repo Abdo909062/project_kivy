@@ -3,8 +3,7 @@ name: Build APK
 on:
   push:
     branches:
-      - main  # Adjust branch name as needed
-  pull_request:
+      - main
 
 jobs:
   build:
@@ -18,7 +17,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'  # Use Java version compatible with your project
+          java-version: '17'
 
       - name: Cache Gradle files
         uses: actions/cache@v3
@@ -31,10 +30,10 @@ jobs:
             gradle-${{ runner.os }}
 
       - name: Build APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: MyApp-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Android-APK
+          path: app/build/outputs/apk/release/app-release.apk
