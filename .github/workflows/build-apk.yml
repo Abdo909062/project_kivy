@@ -24,6 +24,10 @@ jobs:
           mkdir -p $HOME/Android/Sdk/cmdline-tools
           mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
 
+      - name: Verify Android SDK is installed
+        run: |
+          ls -l $HOME/Android/Sdk/cmdline-tools/latest
+
       - name: Upload Android SDK as an artifact
         uses: actions/upload-artifact@v3
         with:
@@ -42,6 +46,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: android-sdk
+
+      - name: Verify Android SDK is downloaded
+        run: |
+          ls -l $HOME/Android/Sdk/cmdline-tools/latest
 
       - name: Set up Python
         uses: actions/setup-python@v4
