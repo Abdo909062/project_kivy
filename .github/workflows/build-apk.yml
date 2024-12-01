@@ -21,7 +21,7 @@ jobs:
     - name: Install system dependencies (python3, build-essential, etc.)
       run: |
         sudo apt-get update
-        sudo apt-get install -y python3-pip python3-dev build-essential
+        sudo apt-get install -y python3-pip python3-dev build-essential curl unzip
 
     - name: Install OpenJDK 8
       run: |
@@ -39,13 +39,20 @@ jobs:
       run: |
         pip install cython
 
-    - name: Install Android SDK and AIDL
+    - name: Install Android SDK
       run: |
-        sudo apt-get install -y android-sdk
-        sudo apt-get install -y android-sdk-platform-tools
-        sudo apt-get install -y android-sdk-build-tools
-        sudo apt-get install -y android-sdk-tools
-        sudo apt-get install -y android-sdk-extra-tools
+        # تحميل Android SDK Command Line Tools
+        curl -s https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -o commandlinetools-linux.zip
+        unzip commandlinetools-linux.zip
+        mkdir -p $HOME/Android/Sdk
+        mv cmdline-tools $HOME/Android/Sdk/
+        # إضافة Android SDK إلى البيئة
+        echo "export ANDROID_HOME=$HOME/Android/Sdk" >> ~/.bashrc
+        echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> ~/.bashrc
+        source ~/.bashrc
+        # تثبيت الأدوات المطلوبة
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
 
     - name: Build APK with Buildozer
       run: |
@@ -57,4 +64,3 @@ jobs:
       with:
         name: my-android-apk
         path: bin/*.apk
-
