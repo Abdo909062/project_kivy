@@ -1,4 +1,4 @@
-name: Upload Android SDK
+name: Build Android APK from Python
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
       - main
 
 jobs:
-  upload:
+  upload_and_build:
     runs-on: ubuntu-latest
 
     steps:
+    # خطوة 1: تحميل أدوات Android SDK ورفعها كـ artifact
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Install system dependencies
+    - name: Install system dependencies (curl, unzip)
       run: |
         sudo apt-get update
         sudo apt-get install -y curl unzip
@@ -31,20 +32,8 @@ jobs:
         name: android-sdk
         path: $HOME/Android/Sdk
 
-#----------------------------------------------------------------------------------------------------------
-name: Build Android APK_from_Python
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out repository
+    # خطوة 2: تحميل الأدوات واستخدامها في بناء الـ APK
+    - name: Check out repository again
       uses: actions/checkout@v3
 
     - name: Download Android SDK
