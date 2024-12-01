@@ -39,6 +39,14 @@ jobs:
       run: |
         pip install cython
 
+    - name: Install Android SDK and AIDL
+      run: |
+        sudo apt-get install -y android-sdk
+        sudo apt-get install -y android-sdk-platform-tools
+        sudo apt-get install -y android-sdk-build-tools
+        sudo apt-get install -y android-sdk-tools
+        sudo apt-get install -y android-sdk-extra-tools
+
     - name: Build APK with Buildozer
       run: |
         cd .  # أو المسار الصحيح لمشروعك
@@ -49,3 +57,4 @@ jobs:
       with:
         name: my-android-apk
         path: bin/*.apk
+
