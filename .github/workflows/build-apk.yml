@@ -51,8 +51,10 @@ jobs:
         echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
         # قبول تراخيص الأدوات
         yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-        # تثبيت الأدوات المطلوبة
+        # تثبيت الأدوات المطلوبة بما في ذلك AIDL
         yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
+        # تثبيت AIDL إذا لم يكن موجودًا
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3"
 
     - name: Build APK with Buildozer
       run: |
