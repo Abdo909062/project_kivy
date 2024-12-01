@@ -21,17 +21,6 @@ jobs:
           pip install buildozer
           pip install cython  # تثبيت Cython
 
-      - name: Check network connection  # خطوة للتحقق من الاتصال بالشبكة
-        run: |
-          ping -c 4 google.com
-
-      - name: Retry network connection if necessary  # إعادة المحاولة في حال حدوث خطأ
-        run: |
-          for i in {1..5}; do
-            echo "Trying to connect... attempt $i"
-            ping -c 1 google.com && break || sleep 5
-          done
-
       - name: Build APK
         run: |
           buildozer android debug
