@@ -17,6 +17,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y openjdk-17-jdk
+          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
           java -version
 
       - name: Install dependencies
@@ -36,13 +37,13 @@ jobs:
           
           # إعداد متغيرات البيئة
           echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> ~/.bashrc
-          echo "export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin" >> ~/.bashrc
+          echo "export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> ~/.bashrc
           source ~/.bashrc
 
-          # قبول التراخيص وتثبيت Aidl
-          yes | $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
-          $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --update
-          $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;21.4.7075529"
+          # قبول التراخيص وتثبيت الأدوات باستخدام sdkmanager
+          yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --update
+          $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;21.4.7075529"
 
       - name: Build APK
         run: |
