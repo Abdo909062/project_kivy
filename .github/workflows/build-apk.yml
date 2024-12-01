@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # تغيير بيئة التشغيل إلى ubuntu-22.04
+    runs-on: ubuntu-22.04  # استخدام بيئة ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -20,6 +20,14 @@ jobs:
           pip install --upgrade pip
           pip install buildozer
           pip install cython  # تثبيت Cython
+          
+      - name: Install Android SDK and AIDL
+        run: |
+          sudo apt-get install -y android-sdk
+          echo "y" | sdkmanager --update  # تحديث SDK Manager
+          sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "system-images;android-30;google_apis;x86_64"
+          sdkmanager "extras;google;m2repository" "extras;android;m2repository" "extras;google;google_play_services"
+          sdkmanager "ndk;21.4.7075529"  # تثبيت أدوات AIDL و NDK
 
       - name: Build APK
         run: |
