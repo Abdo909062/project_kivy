@@ -39,19 +39,20 @@ jobs:
       run: |
         pip install cython
 
-    - name: Install Android SDK
+    - name: Install Android SDK Command Line Tools
       run: |
         # تحميل Android SDK Command Line Tools
         curl -s https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -o commandlinetools-linux.zip
         unzip commandlinetools-linux.zip
-        mkdir -p $HOME/Android/Sdk
-        mv cmdline-tools $HOME/Android/Sdk/
+        mkdir -p $HOME/Android/Sdk/cmdline-tools
+        mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
         # إضافة Android SDK إلى البيئة بشكل صحيح
         echo "export ANDROID_HOME=$HOME/Android/Sdk" >> $GITHUB_ENV
         echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
-        # تحميل الأدوات الأساسية
-        $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-        $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
+        # قبول تراخيص الأدوات
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        # تثبيت الأدوات المطلوبة
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
 
     - name: Build APK with Buildozer
       run: |
