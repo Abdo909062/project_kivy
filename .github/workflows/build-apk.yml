@@ -28,11 +28,12 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        cd your-python-project-directory
+        cd .  # أو قم بتحديد المسار الصحيح هنا إذا كان مشروعك في مجلد فرعي
         buildozer android debug
 
     - name: Upload APK as an artifact
       uses: actions/upload-artifact@v3
       with:
         name: my-android-apk
-        path: your-python-project-directory/bin/*.apk
+        path: bin/*.apk
+
