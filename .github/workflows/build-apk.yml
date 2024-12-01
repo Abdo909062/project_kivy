@@ -13,9 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Java 17
+      - name: Install Latest Java
         run: |
           sudo apt update
+          sudo apt remove -y java-common
           sudo apt install -y openjdk-17-jdk
           sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
           java -version
