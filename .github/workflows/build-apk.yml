@@ -27,12 +27,13 @@ jobs:
       - name: Verify Android SDK is installed
         run: |
           ls -l $HOME/Android/Sdk/cmdline-tools/latest
+          # عرض محتويات المجلد للتأكد من أن الأدوات تم تحميلها
 
       - name: Upload Android SDK as an artifact
         uses: actions/upload-artifact@v3
         with:
           name: android-sdk
-          path: $HOME/Android/Sdk
+          path: $HOME/Android/Sdk/*  # تأكد من رفع كل شيء في المجلد
 
   build_apk:
     runs-on: ubuntu-latest
@@ -49,7 +50,7 @@ jobs:
 
       - name: Verify Android SDK is downloaded
         run: |
-          ls -l $HOME/Android/Sdk/cmdline-tools/latest
+          ls -l $HOME/Android/Sdk/cmdline-tools/latest  # عرض محتويات المجلد بعد تنزيله
 
       - name: Set up Python
         uses: actions/setup-python@v4
