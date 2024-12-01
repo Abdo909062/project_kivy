@@ -1,4 +1,4 @@
-name: Build Kivy APK
+name: Build Android APK from Python
 
 on:
   push:
@@ -7,67 +7,32 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-      - name: Install Java 17
-        run: |
-          # إزالة أي إعدادات قديمة لـ JAVA_HOME
-          sudo apt update
-          sudo apt remove -y openjdk-11-jdk
-          sudo apt remove -y java-common
-          
-          # تثبيت Java 17
-          sudo apt install -y openjdk-17-jdk
-          
-          # ضبط JAVA_HOME للإصدار المثبت حديثًا
-          echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
-          echo "export PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
-          source $GITHUB_ENV
-          
-          # التحقق من إعدادات Java
-          echo "JAVA_HOME is set to $JAVA_HOME"
-          java -version
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Install Python and Buildozer
-        run: |
-          sudo apt install -y python3 python3-pip build-essential git zip unzip wget
-          pip install --upgrade pip
-          pip install buildozer cython
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip python3-dev build-essential
+        sudo apt-get install -y openjdk-8-jdk
+        pip install --upgrade pip
+        pip install buildozer
 
-      - name: Install Android SDK and Tools
-        run: |
-          # تنزيل Android SDK Command Line Tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-          mkdir -p $HOME/Android/Sdk/cmdline-tools
-          unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
-          mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
-          rm cmdline-tools.zip
-          
-          # إعداد متغيرات البيئة
-          echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> $GITHUB_ENV
-          echo "export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH" >> $GITHUB_ENV
-          source $GITHUB_ENV
-          
-          # قبول التراخيص وتثبيت الأدوات
-          yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --update
-          $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;21.4.7075529"
+    - name: Build APK with Buildozer
+      run: |
+        cd your-python-project-directory
+        buildozer android debug
 
-      - name: Verify Android SDK Installation
-        run: |
-          ls -la $HOME/Android/Sdk/cmdline-tools/latest/bin
-          ls -la $HOME/Android/Sdk/platform-tools
-
-      - name: Build APK
-        run: |
-          buildozer android debug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: Kivy-APK
-          path: bin/*.apk
+    - name: Upload APK as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-android-apk
+        path: your-python-project-directory/bin/*.apk
