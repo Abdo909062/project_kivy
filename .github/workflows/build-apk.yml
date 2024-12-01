@@ -15,19 +15,20 @@ jobs:
 
       - name: Install Java 17
         run: |
-          # إزالة أي إعدادات قديمة
+          # إزالة أي إعدادات قديمة لـ JAVA_HOME
           sudo apt update
+          sudo apt remove -y openjdk-11-jdk
           sudo apt remove -y java-common
           
           # تثبيت Java 17
           sudo apt install -y openjdk-17-jdk
           
-          # إعداد JAVA_HOME بشكل صحيح
+          # ضبط JAVA_HOME للإصدار المثبت حديثًا
           echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
           echo "export PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
           
-          # التحقق من إعداد Java
+          # التحقق من إعدادات Java
           echo "JAVA_HOME is set to $JAVA_HOME"
           java -version
 
