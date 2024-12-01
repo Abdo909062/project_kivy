@@ -13,18 +13,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Latest Java
+      - name: Install Java 17
         run: |
+          # إزالة أي إعدادات قديمة
           sudo apt update
           sudo apt remove -y java-common
+          
+          # تثبيت Java 17
           sudo apt install -y openjdk-17-jdk
           
-          # ضبط JAVA_HOME
+          # إعداد JAVA_HOME بشكل صحيح
           echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
           echo "export PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
           
-          # التحقق من إصدار Java
+          # التحقق من إعداد Java
+          echo "JAVA_HOME is set to $JAVA_HOME"
           java -version
 
       - name: Install Python and Buildozer
