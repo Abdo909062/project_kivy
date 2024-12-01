@@ -1,6 +1,6 @@
-# GitHub Action to Build Kivy App to APK
+# Kivy to APK Conversion using GitHub Actions
 
-name: Build Kivy App
+name: Build APK
 
 on:
   push:
@@ -15,24 +15,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
         with:
-          python-version: '3.8'
+          java-version: '11'
 
       - name: Install dependencies
         run: |
-          pip install kivy
-          pip install buildozer
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install kivy
+          pip3 install buildozer
+
+      - name: Install Buildozer
+        run: |
+          pip3 install buildozer
+          sudo apt-get install -y python3-setuptools python3-dev
+          sudo apt-get install -y libffi-dev libssl-dev
+          sudo apt-get install -y libsqlite3-dev
+          sudo apt-get install -y libncurses5-dev libncursesw5-dev
+          sudo apt-get install -y libreadline-dev libbz2-dev
+          sudo apt-get install -y zlib1g-dev
 
       - name: Build APK
         run: |
           buildozer init
           buildozer -v android debug
-          
+
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: myapp.apk
-          path: bin/*.apk
-
+          name: myapp-debug.apk
+          path: bin/myapp-*.apk
