@@ -23,10 +23,10 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          # تنزيل Android SDK Command Line Tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-8500000_latest.zip
-          unzip commandlinetools-linux-8500000_latest.zip -d $HOME/Android
-          rm commandlinetools-linux-8500000_latest.zip
+          # تنزيل Android SDK Command Line Tools من الرابط الصحيح
+          wget https://dl.google.com/android/repository/commandlinetools-linux-10123404_latest.zip
+          unzip commandlinetools-linux-10123404_latest.zip -d $HOME/Android
+          rm commandlinetools-linux-10123404_latest.zip
           mkdir -p $HOME/Android/Sdk
           mv $HOME/Android/cmdline-tools $HOME/Android/Sdk/cmdline-tools
 
