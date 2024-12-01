@@ -30,17 +30,18 @@ jobs:
         run: |
           # تنزيل Android SDK Command Line Tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-          mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
-          unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools/latest
+          mkdir -p $HOME/Android/Sdk/cmdline-tools
+          unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
+          mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
           rm cmdline-tools.zip
           
           # إعداد متغيرات البيئة
-          echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> ~/.bashrc
-          echo "export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools" >> ~/.bashrc
-          source ~/.bashrc
+          echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> $GITHUB_ENV
+          echo "export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH" >> $GITHUB_ENV
+          source $GITHUB_ENV
           
           # قبول التراخيص وتثبيت الأدوات
-          yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
           $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --update
           $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;21.4.7075529"
 
