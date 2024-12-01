@@ -16,18 +16,29 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3 python3-pip build-essential git zip unzip openjdk-11-jdk
+          sudo apt install -y python3 python3-pip build-essential git zip unzip openjdk-11-jdk wget
           pip install --upgrade pip
           pip install buildozer
           pip install cython  # تثبيت Cython
-          
-      - name: Install Android SDK and AIDL
+
+      - name: Install Android SDK
         run: |
-          sudo apt-get install -y android-sdk
-          echo "y" | sdkmanager --update  # تحديث SDK Manager
+          # تنزيل Android SDK Command Line Tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-8500000_latest.zip
+          unzip commandlinetools-linux-8500000_latest.zip -d $HOME/Android
+          rm commandlinetools-linux-8500000_latest.zip
+          mkdir -p $HOME/Android/Sdk
+          mv $HOME/Android/cmdline-tools $HOME/Android/Sdk/cmdline-tools
+
+          # إعداد متغير البيئة لـ Android SDK
+          echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> ~/.bashrc
+          echo "export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin" >> ~/.bashrc
+          source ~/.bashrc
+
+          # تثبيت الأدوات الأساسية باستخدام sdkmanager
+          sdkmanager --update
           sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "system-images;android-30;google_apis;x86_64"
-          sdkmanager "extras;google;m2repository" "extras;android;m2repository" "extras;google;google_play_services"
-          sdkmanager "ndk;21.4.7075529"  # تثبيت أدوات AIDL و NDK
+          sdkmanager "ndk;21.4.7075529"  # تثبيت NDK
 
       - name: Build APK
         run: |
