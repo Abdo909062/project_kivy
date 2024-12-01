@@ -10,30 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: تنزيل الكود
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: إعداد Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip build-essential git zip unzip openjdk-11-jdk
+          pip install buildozer
 
-      - name: إعداد Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 31
-          build-tools: 31.0.0
-          ndk: '22.1.7171670'
+      - name: Build APK
+        run: |
+          buildozer android debug
 
-      - name: جعل gradlew قابلاً للتنفيذ
-        run: chmod +x .github/workflows/gradlew
-
-      - name: بناء APK
-        run: .github/workflows/gradlew assembleRelease
-
-      - name: رفع ملف APK
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: Android-APK
-          path: app/build/outputs/apk/release/app-release.apk
+          name: Kivy-APK
+          path: bin/*.apk
