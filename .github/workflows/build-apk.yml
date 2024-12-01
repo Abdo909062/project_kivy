@@ -1,4 +1,4 @@
-# Kivy to APK GitHub Action
+# Kivy to APK GitHub Action Workflow
 
 name: Build Kivy APK
 
@@ -15,24 +15,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'adopt'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip python3-setuptools python3-wheel
-          pip3 install kivy buildozer
+          pip3 install kivy
+          pip3 install buildozer
 
       - name: Build APK
         run: |
-          cd your_kivy_project_directory
+          buildozer init
           buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: Kivy-APK
-          path: your_kivy_project_directory/bin/*.apk
+          name: kivy-apk
+          path: bin/*.apk
