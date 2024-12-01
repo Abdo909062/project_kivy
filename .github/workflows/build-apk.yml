@@ -46,13 +46,12 @@ jobs:
         unzip commandlinetools-linux.zip
         mkdir -p $HOME/Android/Sdk
         mv cmdline-tools $HOME/Android/Sdk/
-        # إضافة Android SDK إلى البيئة
-        echo "export ANDROID_HOME=$HOME/Android/Sdk" >> ~/.bashrc
-        echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> ~/.bashrc
-        source ~/.bashrc
-        # تثبيت الأدوات المطلوبة
-        yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
+        # إضافة Android SDK إلى البيئة بشكل صحيح
+        echo "export ANDROID_HOME=$HOME/Android/Sdk" >> $GITHUB_ENV
+        echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+        # تحميل الأدوات الأساسية
+        $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-29" "system-images;android-29;google_apis;x86_64"
 
     - name: Build APK with Buildozer
       run: |
