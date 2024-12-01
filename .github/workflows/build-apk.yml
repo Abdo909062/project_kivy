@@ -13,13 +13,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install Java 17
         run: |
           sudo apt update
-          sudo apt install -y python3 python3-pip build-essential git zip unzip openjdk-11-jdk wget
+          sudo apt install -y openjdk-17-jdk
+          java -version
+
+      - name: Install dependencies
+        run: |
+          sudo apt install -y python3 python3-pip build-essential git zip unzip wget
           pip install --upgrade pip
           pip install buildozer
           pip install cython
+
+      - name: Install Android SDK and Aidl
+        run: |
+          # تنزيل Android SDK Command Line Tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
+          mkdir -p $HOME/Android/Sdk/cmdline-tools
+          unzip commandlinetools-linux-10406996_latest.zip -d $HOME/Android/Sdk/cmdline-tools
+          rm commandlinetools-linux-10406996_latest.zip
+          
+          # إعداد متغيرات البيئة
+          echo "export ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> ~/.bashrc
+          echo "export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/bin" >> ~/.bashrc
+          source ~/.bashrc
+
+          # قبول التراخيص وتثبيت Aidl
+          yes | $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --licenses
+          $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager --update
+          $HOME/Android/Sdk/cmdline-tools/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;21.4.7075529"
 
       - name: Build APK
         run: |
