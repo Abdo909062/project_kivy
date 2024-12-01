@@ -39,6 +39,10 @@ jobs:
       run: |
         pip install cython
 
+    - name: Check network connectivity
+      run: |
+        ping -c 4 google.com
+
     - name: Install Android SDK Command Line Tools
       run: |
         # تحميل Android SDK Command Line Tools
